@@ -1,0 +1,16 @@
+C:\Users\Denel\source\repos\Курсова\bin\Debug\Курсова.exe.config
+C:\Users\Denel\source\repos\Курсова\bin\Debug\Курсова.exe
+C:\Users\Denel\source\repos\Курсова\bin\Debug\Курсова.pdb
+C:\Users\Denel\source\repos\Курсова\obj\Debug\Курсова.csprojAssemblyReference.cache
+C:\Users\Denel\source\repos\Курсова\obj\Debug\Курсова.Properties.Resources.resources
+C:\Users\Denel\source\repos\Курсова\obj\Debug\Курсова.csproj.GenerateResource.cache
+C:\Users\Denel\source\repos\Курсова\obj\Debug\Курсова.exe
+C:\Users\Denel\source\repos\Курсова\obj\Debug\Курсова.pdb
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\bin\Debug\Курсова.exe.config
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\bin\Debug\Курсова.exe
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\bin\Debug\Курсова.pdb
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.csprojAssemblyReference.cache
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.Properties.Resources.resources
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.csproj.GenerateResource.cache
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.exe
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.pdb
