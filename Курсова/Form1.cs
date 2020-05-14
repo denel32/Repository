@@ -222,7 +222,6 @@ namespace Курсова
             myConnection.Open();
             var rand = new Random();
 
-
             Word(verb8, 8);
             usedwords.Clear();
             Word(verb7, 7);
@@ -235,7 +234,6 @@ namespace Курсова
             usedwords.Clear();
             lo.Font = new Font("Times New Roman", this.Height / 60);
             lo.Text = "ГОТОВО!";
-
 
             int maxX = int.MinValue;
             int maxY = int.MinValue;
@@ -285,8 +283,6 @@ namespace Курсова
                             list_of_Textboxes[i][j].Click += new EventHandler(quest11_click);
                             break;
                     }
-
-
                 }
             }
             int deltaX = 600 - (minX + maxX) / 2;
@@ -444,6 +440,9 @@ namespace Курсова
                                                     goto Skip;
                                             }
                                         }
+                                        if (px > 1200 || py > 900)
+                                            goto Skip;
+
                                         verbs.Add(new TextBox());
                                         verbs[i].Name = "w" + j.ToString() + "k" + i.ToString();
                                         verbs[i].Location = new Point(px, py);
