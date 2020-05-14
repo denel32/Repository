@@ -116,8 +116,8 @@ namespace Курсова
             //DoubleBuffered = true;
 
             BeforeMenu();
-            lo.Location = new Point(400, 50);
-            lo.Size = new Size(200, 50);
+            lo.Location = new Point(200, 50);
+            lo.Size = new Size(600, 50);
             lo.ForeColor = Color.Orange;
             Controls.Add(lo);
 
@@ -217,7 +217,7 @@ namespace Курсова
             crosswordpanel.Location = new Point(0, 0);
             crosswordpanel.Size = new Size(1200, 900);
             int range_top_left_angle = 3;//*50-in points
-            int range_bottom_right_angle = 15;//*50-in points
+            int range_bottom_right_angle = 17;//*50-in points
             myConnection = new OleDbConnection(connectString);
             myConnection.Open();
             var rand = new Random();
@@ -233,6 +233,7 @@ namespace Курсова
             usedwords.Clear();
             Word(verb4, 4);
             usedwords.Clear();
+            lo.Font = new Font("Times New Roman", this.Height / 60);
             lo.Text = "ГОТОВО!";
 
 
@@ -288,17 +289,8 @@ namespace Курсова
 
                 }
             }
-            int deltaX = Math.Abs(minX - Math.Abs(1200 - maxX)) / 2;
-            int deltaY = Math.Abs(minY - Math.Abs(900 - maxY)) / 2;
-            if (minX > deltaX)
-            {
-                deltaX *= -1;
-
-            }
-            if (minY > deltaY)
-            {
-                deltaY *= -1;
-            }
+            int deltaX = 600 - (minX + maxX) / 2;
+            int deltaY = 450 - (minY + maxY) / 2;
             lo.Text = "deltaX: " + deltaX + "\ndeltaY: " + deltaY;
             for (int i = 0; i < list_of_Textboxes.Count; i++)
             {
@@ -309,7 +301,7 @@ namespace Курсова
                         if (p == list_of_Textboxes[i][j])
                             goto skip;
                     }
-                    list_of_Textboxes[i][j].Location = new Point(list_of_Textboxes[i][j].Location.X - deltaX, list_of_Textboxes[i][j].Location.Y + deltaY);
+                    list_of_Textboxes[i][j].Location = new Point(list_of_Textboxes[i][j].Location.X + deltaX, list_of_Textboxes[i][j].Location.Y + deltaY);
                     scale.Add(list_of_Textboxes[i][j]);
                 skip:;
                 }
@@ -526,6 +518,7 @@ namespace Курсова
         private void quest2_click(object sender, EventArgs e)
         {
             Selectword(1);
+            lo.Text = questions[1].ToString();
         }
         private void quest3_click(object sender, EventArgs e)
         {
