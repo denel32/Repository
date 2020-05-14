@@ -14,3 +14,4 @@ C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсов
 C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.csproj.GenerateResource.cache
 C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.exe
 C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.pdb
+C:\Users\Denel\Desktop\GitRepos\Repository\Курсова\obj\Debug\Курсова.Form1.resources
