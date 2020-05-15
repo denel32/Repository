@@ -1,4 +1,6 @@
-﻿namespace Курсова
+﻿using System;
+
+namespace Курсова
 {
     partial class Form1
     {
@@ -44,6 +46,8 @@
             this.ResumeLayout(false);
 
         }
+
+
 
         #endregion
     }
