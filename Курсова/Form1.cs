@@ -14,6 +14,7 @@ namespace Курсова
         public List<int> usedwords = new List<int>();
         public List<List<TextBox>> list_of_Textboxes = new List<List<TextBox>>();
         public List<String> questions = new List<string>();
+        public int direction = 1;
         public int changedirection = -1;
         public List<TextBox> scale = new List<TextBox>();
 
@@ -31,25 +32,20 @@ namespace Курсова
         public Label checkslabel = new Label();
         public Label scorelabel = new Label();
         public Label scorelabel2 = new Label();
+        public Label secs = new Label();
 
         public int dif = 0;
         public int score = 0;
         public int gametime = 0;
         public int checks = 0;
-        public int mult = 1;
-
-        public Label secs = new Label();
-
         public List<int> unrepeat = new List<int>();
-
         public Button check = new Button();
-
         public int multtime = 1;
-
-        public int direction = 1;
-        public List<TextBox> list_of_used_points = new List<TextBox>();
-
+        public double percents = 0.1;
+        public Panel loadpanel = new Panel();
+        public Pen pen;
         public Label lo = new Label();
+        public Label percentslabel = new Label();
 
         void Buttonsdestroy()
         {
@@ -59,8 +55,15 @@ namespace Курсова
         }
 
 
-
-        public static int CheckLocation(ref List<List<TextBox>> list, Point pos, char verb, ref List<TextBox> verbs)
+        public new void Menu()
+        {
+            startpanel.Location = new Point(0, 0);
+            startpanel.Size = new Size(1200, 900);
+            startpanel.BackgroundImage = Image.FromFile("Crossword.png");
+            startpanel.Click += new EventHandler(this.startpanel_Click);
+            Controls.Add(startpanel);
+        }
+        public static int CheckLocation(ref List<List<TextBox>> list, Point pos, char verb, ref List<TextBox> verbs, ref List<string> true_ans)
         {
             for (int k = 0; k < list.Count; k++)
             {
@@ -68,7 +71,7 @@ namespace Курсова
                 {
                     if (pos.ToString() == list[k][l].Location.ToString())
                     {
-                        if (list[k][l].Text == verb.ToString())
+                        if (true_ans[k][l] == verb)
                         {
                             verbs.Add(list[k][l]);
                             return 1;
@@ -159,14 +162,10 @@ namespace Курсова
         public Form1()
         {
             InitializeComponent();
-            BeforeMenu();
-
             lo.Location = new Point(300, 25);
             lo.Size = new Size(600, 50);
             lo.ForeColor = Color.Orange;
 
-            startpanel.Location = new Point(0, 0);
-            startpanel.Size = new Size(1200, 900);
             diff1.Text = "Легкий";
             diff2.Text = "Середній";
             diff3.Text = "Складний";
@@ -224,21 +223,18 @@ namespace Курсова
             diff1.Click += new EventHandler(diff1_click);
             diff2.Click += new EventHandler(diff2_click);
             diff3.Click += new EventHandler(diff3_click);
-
-
-            Image screen = Image.FromFile("Crossword.png");
-            startpanel.BackgroundImage = screen;
-            Controls.Add(startpanel);
-            startpanel.Click += new EventHandler(this.startpanel_Click);
             ClientSize = new Size(1200, 900);
+            Launch();
+            Menu();
+
         }
-        void BeforeMenu()
+        void Launch()
         {
             {
                 {
-                    Panel Load = new Panel();
-                    Load.Location = new Point(0, 0);
-                    Load.Size = new Size(1200, 900);
+                    Panel launch = new Panel();
+                    launch.Location = new Point(0, 0);
+                    launch.Size = new Size(1200, 900);
 
 
                     int time = -10;
@@ -253,17 +249,17 @@ namespace Курсова
                     };
                     timer.Start();
 
-                    Controls.Add(Load);
+                    Controls.Add(launch);
                     Paint += (sender, args) =>
                     {
                         switch (time)
                         {
                             default:
-                                Load.BackColor = ColorTranslator.FromHtml("#202020");
+                                launch.BackColor = ColorTranslator.FromHtml("#202020");
                                 break;
                             case 6:
                                 timer.Stop();
-                                Load.Dispose();
+                                launch.Dispose();
                                 break;
                         }
                     };
@@ -275,7 +271,23 @@ namespace Курсова
         void LoadScreen()
         {
 
+            percentslabel.Location = new Point(550, 400);
+            percentslabel.ForeColor = ColorTranslator.FromHtml("#ffb26b");
+            percentslabel.BackColor = ColorTranslator.FromHtml("#202020");
+            percentslabel.Text = Math.Truncate(percents).ToString();
+            percentslabel.Size = new Size(300, 300);
+            percentslabel.Font = new Font("Times New Roman", this.Height / 20);
+            Controls.Add(percentslabel);
+
+            loadpanel.Location = new Point(0, 0);
+            loadpanel.Size = new Size(1200, 900);
+            loadpanel.BackColor = ColorTranslator.FromHtml("#202020");
+            Controls.Add(loadpanel);
+
+
         }
+
+
         void sec(bool start)
         {
             Timer tm = new Timer();
@@ -288,10 +300,10 @@ namespace Курсова
                     Invalidate();
                 }
             };
+            tm.Stop();
             score = 0;
             checks = 0;
             gametime = 0;
-            tm.Stop();
             tm.Start();
 
 
@@ -299,10 +311,8 @@ namespace Курсова
             void tm_Tick(object sender, EventArgs e)
             {
                 scorelabel2.Text = "Рахунок:\n" + score.ToString();
-                scorelabel.Text = score.ToString();
-                secs.Text = "Час:\n"+gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
+                secs.Text = "Час:\n" + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
                 gametime++;
-                Controls.Add(scorelabel2);
             }
 
 
@@ -317,7 +327,7 @@ namespace Курсова
             myConnection = new OleDbConnection(connectString);
             myConnection.Open();
             var rand = new Random();
-
+            percents = 0.1;
 
             Word(verb8, 8);
             usedwords.Clear();
@@ -329,6 +339,8 @@ namespace Курсова
             usedwords.Clear();
             Word(verb4, 4);
             usedwords.Clear();
+
+            percentslabel.Dispose();
             lo.Font = new Font("Times New Roman", this.Height / 60);
             lo.TextAlign = ContentAlignment.MiddleCenter;
             check.Location = new Point(1050, 100);
@@ -336,6 +348,7 @@ namespace Курсова
             check.Text = "Перевірка";
             check.BackColor = ColorTranslator.FromHtml("#ffb26b");
             check.Font = new Font("Times New Roman", this.Height / 80);
+            check.FlatStyle = FlatStyle.Flat;
             Controls.Add(check);
             Controls.Add(lo);
 
@@ -408,7 +421,6 @@ namespace Курсова
                 }
             }
 
-            unrepeat.Clear();
 
             sec(true);
             secs.Location = new Point(1100, 150);
@@ -416,7 +428,8 @@ namespace Курсова
             secs.BackColor = ColorTranslator.FromHtml("#202020");
             secs.ForeColor = ColorTranslator.FromHtml("#ffb26b");
             Controls.Add(secs);
-
+            Controls.Add(scorelabel2);
+            loadpanel.Dispose();
 
             void Word(int num, int lg)
             {
@@ -425,10 +438,7 @@ namespace Курсова
                 {
                 restart:
                     changedirection++;
-                    list_of_used_points.Clear();
-
-
-                    var randword = rand.Next(1, 99);
+                    int randword = rand.Next(1, 99);
 
                     foreach (int i in usedwords)
                     {
@@ -475,7 +485,7 @@ namespace Курсова
                                 Point pos_right = new Point(px + 50, py);
                                 Point pos_buttom = new Point(px, py + 50);
 
-                                switch (CheckLocation(ref list_of_Textboxes, new Point(px, py), command.ExecuteScalar().ToString()[i], ref verbs))
+                                switch (CheckLocation(ref list_of_Textboxes, new Point(px, py), command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers))
                                 {
                                     case 1:
                                         cross = true;
@@ -487,12 +497,12 @@ namespace Курсова
                                             px += 50;
                                             if (i == command.ExecuteScalar().ToString().Length - 1)
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                             else
                                                 if (i == 0)
-                                                if (CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                         }
                                         else
@@ -500,12 +510,12 @@ namespace Курсова
                                             if (i == command.ExecuteScalar().ToString().Length - 1)
                                             {
 
-                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                             if (i == 0)
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                             py += 50;
@@ -523,32 +533,32 @@ namespace Курсова
 
                                         if (i == 0)//first verb
                                         {
-                                            if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs) != 0
-                                                || CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                            if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0
+                                                || CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                 goto Skip;
                                         }
 
                                         if (direction == 1)
                                         {
-                                            if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs) != 0 ||
-                                                CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                            if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0 ||
+                                                CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                 goto Skip;
 
                                             if (i == command.ExecuteScalar().ToString().Length - 1)//last verb
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                         }
                                         else
                                         {
-                                            if (CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs) != 0 ||
-                                                CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                            if (CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0 ||
+                                                CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                 goto Skip;
 
                                             if (i == command.ExecuteScalar().ToString().Length - 1)//last verb
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                         }
@@ -571,7 +581,7 @@ namespace Курсова
                                         else
                                             py += 50;
 
-                                        verbs[i].Text = command.ExecuteScalar().ToString()[i].ToString();
+                                        //verbs[i].Text = command.ExecuteScalar().ToString()[i].ToString();
                                         break;
 
                                     default:
@@ -593,8 +603,9 @@ namespace Курсова
                             questions.Add(command2.ExecuteScalar().ToString());
                             foreach (TextBox o in verbs)
                                 Controls.Add(o);
-
-                            Skip:;
+                            percents += 9.09;
+                            percentslabel.Text = Math.Truncate(percents).ToString() + "%";
+                        Skip:;
                         }
                     }
                     goto restart;
@@ -622,7 +633,7 @@ namespace Курсова
             BackgroundImage = Image.FromFile("Results3.png");
             checkslabel.Text = checks.ToString();
 
-            gametimelabel.Text = gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
+            gametimelabel.Text = "X" + multtime + ".    " + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
             switch (dif)
             {
                 case 1:
@@ -645,12 +656,15 @@ namespace Курсова
                  if ((gametime / 60) < 10)
                 multtime = 2;
 
-
+            checkslabel.Text = "X(1/" + checks + ")    " + checks.ToString();
+            gametimelabel.Text = "X" + multtime + "    " + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
+            scorelabel.Text = "X(" + multtime + "/" + checks + ")   " + score * multtime / checks;
             Controls.Add(scorelabel);
             Controls.Add(checkslabel);
             Controls.Add(gametimelabel);
-            Controls.Add(diflabel);            
+            Controls.Add(diflabel);
         }
+
         private void check_click(object sender, EventArgs e)
         {
             checks++;
@@ -665,31 +679,42 @@ namespace Курсова
                 if (true_answers[i] == conc)
                     ChangeColor(i);
                 else
-                {
                     alldone = false;
-                    mult = 1;
-                }
             }
+            Scorecalc();
             if (alldone)
                 EndGame();
         }
-        void ChangeColor( int word)
+        void Scorecalc()
         {
+            for (int i = 0; i < list_of_Textboxes.Count; i++)
+            {
                 bool norepeat = true;
-                foreach(int l in unrepeat)
+                foreach (int j in unrepeat)
                 {
-                    if (l == word)
+                    if (i == j)
+                    {
                         norepeat = false;
-                    break;
+                        break;
+                    }
                 }
-                if(norepeat)
-                score += 305 * list_of_Textboxes[word].Count * dif * mult;
-
-                for (int j = 0; j < list_of_Textboxes[word].Count; j++)
+                if (list_of_Textboxes[i][0].Enabled == false && norepeat)
                 {
-                    list_of_Textboxes[word][j].BackColor = Color.LightGreen;
-                    list_of_Textboxes[word][j].Enabled = false;
+                    unrepeat.Add(i);
+                    score += 305 * list_of_Textboxes[i].Count;
                 }
+
+            }
+
+        }
+        void ChangeColor(int word)
+        {
+
+            for (int j = 0; j < list_of_Textboxes[word].Count; j++)
+            {
+                list_of_Textboxes[word][j].BackColor = Color.LightGreen;
+                list_of_Textboxes[word][j].Enabled = false;
+            }
         }
 
         void Selectword(int num)
