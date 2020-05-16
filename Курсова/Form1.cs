@@ -38,24 +38,23 @@ namespace Курсова
         public int score = 0;
         public int gametime = 0;
         public int checks = 0;
+
         public List<int> unrepeat = new List<int>();
         public Button check = new Button();
         public int multtime = 1;
         public double percents = 0.1;
         public Panel loadpanel = new Panel();
-        public Pen pen;
         public Label lo = new Label();
         public Label percentslabel = new Label();
 
-        void Buttonsdestroy()
+        void Buttonsdestroy()/*Метод видалення кнопок рівнів складності*/
         {
             diff1.Dispose();
             diff2.Dispose();
             diff3.Dispose();
         }
 
-
-        public new void Menu()
+        public new void Menu()/*стартове меню*/
         {
             startpanel.Location = new Point(0, 0);
             startpanel.Size = new Size(1200, 900);
@@ -65,6 +64,7 @@ namespace Курсова
         }
         public static int CheckLocation(ref List<List<TextBox>> list, Point pos, char verb, ref List<TextBox> verbs, ref List<string> true_ans)
         {
+            /*Метод перевіре наявність текстбокса з певними кординатами та його літеру*/
             for (int k = 0; k < list.Count; k++)
             {
                 for (int l = 0; l < list[k].Count; l++)
@@ -74,14 +74,14 @@ namespace Курсова
                         if (true_ans[k][l] == verb)
                         {
                             verbs.Add(list[k][l]);
-                            return 1;
+                            return 1;/*Текстбокс знайдений та його літера співпадае з літерою новостворенного текстбокса*/
                         }
                         else
-                            return -1;
+                            return -1;/*Текстбокс знайдений та його літера не співпадае з літерою новостворенного текстбокса*/
                     }
                 }
             }
-            return 0;
+            return 0;/*Текстбокс не знайдений*/
         }
         private void diff3_click(object sender, EventArgs e)
         {
@@ -129,7 +129,6 @@ namespace Курсова
         }
         void Rulespanel()
         {
-
             rulespanel.BackgroundImage = Image.FromFile("Rules.png");
             rulespanel.Location = new Point(0, 0);
             rulespanel.Size = new Size(1200, 900);
@@ -154,9 +153,6 @@ namespace Курсова
             diffchoosepanel.Size = new Size(1200, 900);
             startpanel.Dispose();
             Rulespanel();
-
-
-
         }
 
         public Form1()
@@ -228,7 +224,7 @@ namespace Курсова
             Menu();
 
         }
-        void Launch()
+        void Launch()/*Чорний єкран на початку*/
         {
             {
                 {
@@ -268,7 +264,7 @@ namespace Курсова
             }
 
         }
-        void LoadScreen()
+        void LoadScreen()/*Приховує процес побудови кросворду*/
         {
 
             percentslabel.Location = new Point(550, 400);
@@ -288,7 +284,7 @@ namespace Курсова
         }
 
 
-        void sec(bool start)
+        void sec(bool start)/*Секундомер гри*/
         {
             Timer tm = new Timer();
             tm.Tick += new EventHandler(tm_Tick);
@@ -317,11 +313,8 @@ namespace Курсова
 
 
         }
-        void Main(int verb8, int verb7, int verb6, int verb5, int verb4)
+        void Main(int verb8, int verb7, int verb6, int verb5, int verb4)/*Метод розподілення слів до генерації відносно рівня складності*/
         {
-            Panel crosswordpanel = new Panel();
-            crosswordpanel.Location = new Point(0, 0);
-            crosswordpanel.Size = new Size(1200, 900);
             int range_top_left_angle = 3;//*50-in points
             int range_bottom_right_angle = 16;//*50-in points
             myConnection = new OleDbConnection(connectString);
@@ -354,6 +347,7 @@ namespace Курсова
 
             check.Click += new EventHandler(check_click);
 
+            /*Початок методу центрування кросворду*/
             int maxX = int.MinValue;
             int maxY = int.MinValue;
             int minX = int.MaxValue;
@@ -420,9 +414,9 @@ namespace Курсова
                 skip:;
                 }
             }
+            /*Кінець методу центування*/
 
-
-            sec(true);
+            sec(true);/*запуск секундомера*/
             secs.Location = new Point(1100, 150);
             secs.Size = new Size(100, 25);
             secs.BackColor = ColorTranslator.FromHtml("#202020");
@@ -431,9 +425,9 @@ namespace Курсова
             Controls.Add(scorelabel2);
             loadpanel.Dispose();
 
-            void Word(int num, int lg)
+            void Word(int num, int lg)/*Алгоритм генерації*/
             {
-
+                /*Випадковим чином бере слово з БД та перевія його на можливість додання до кросворду*/
                 for (int j = 0; j < num; j++)
                 {
                 restart:
@@ -615,9 +609,8 @@ namespace Курсова
             }
 
 
-
         }
-        public void EndGame()
+        public void EndGame()/*Метод закінчення гри та виведення статистики*/
         {
             scorelabel2.Dispose();
             secs.Dispose();
@@ -665,7 +658,7 @@ namespace Курсова
             Controls.Add(diflabel);
         }
 
-        private void check_click(object sender, EventArgs e)
+        private void check_click(object sender, EventArgs e)/*Кнопка перевірки*/
         {
             checks++;
             bool alldone = true;
@@ -685,7 +678,7 @@ namespace Курсова
             if (alldone)
                 EndGame();
         }
-        void Scorecalc()
+        void Scorecalc()/*Метод вираховування очок*/
         {
             for (int i = 0; i < list_of_Textboxes.Count; i++)
             {
@@ -707,7 +700,7 @@ namespace Курсова
             }
 
         }
-        void ChangeColor(int word)
+        void ChangeColor(int word)/*Зафарбовує в зелений та блокує правильно введені слова*/
         {
 
             for (int j = 0; j < list_of_Textboxes[word].Count; j++)
@@ -717,7 +710,7 @@ namespace Курсова
             }
         }
 
-        void Selectword(int num)
+        void Selectword(int num)/*Виділянє усе слово при натисканні на 1 з його текстбоксів*/
         {
             for (int i = 0; i < list_of_Textboxes.Count; i++)
             {
@@ -734,6 +727,7 @@ namespace Курсова
             }
         }
 
+        /*Події для натискання на текстбокси, які є частинами слів. Хотілося би це реалізувати 1 циклом*/
         private void quest1_click(object sender, EventArgs e)
         {
             Selectword(0);
