@@ -8,7 +8,7 @@ namespace Курсова
 {
     public partial class Form1 : Form
     {
-        public static string connectString = "Provider=Microsoft.JET.OLEDB.4.0;Data Source=Database1.mdb;";
+        public static string connectString = "Provider=Microsoft.JET.OLEDB.4.0;Data Source=Data/Database1.mdb;";
         private OleDbConnection myConnection;
         public List<string> true_answers = new List<string>();
         public List<int> usedwords = new List<int>();
@@ -34,7 +34,7 @@ namespace Курсова
         public Label scorelabel2 = new Label();
         public Label secs = new Label();
 
-        public int dif = 0;
+        public string dif = "none";
         public int score = 0;
         public int gametime = 0;
         public int checks = 0;
@@ -46,114 +46,6 @@ namespace Курсова
         public Panel loadpanel = new Panel();
         public Label lo = new Label();
         public Label percentslabel = new Label();
-
-        void Buttonsdestroy()/*Метод видалення кнопок рівнів складності*/
-        {
-            diff1.Dispose();
-            diff2.Dispose();
-            diff3.Dispose();
-        }
-
-        public new void Menu()/*стартове меню*/
-        {
-            startpanel.Location = new Point(0, 0);
-            startpanel.Size = new Size(1200, 900);
-            startpanel.BackgroundImage = Image.FromFile("Crossword.png");
-            startpanel.Click += new EventHandler(this.startpanel_Click);
-            Controls.Add(startpanel);
-        }
-        public static int CheckLocation(ref List<List<TextBox>> list, Point pos, char verb, ref List<TextBox> verbs, ref List<string> true_ans)
-        {
-            /*Метод перевіре наявність текстбокса з певними кординатами та його літеру*/
-            for (int k = 0; k < list.Count; k++)
-            {
-                for (int l = 0; l < list[k].Count; l++)
-                {
-                    if (pos.ToString() == list[k][l].Location.ToString())
-                    {
-                        if (true_ans[k][l] == verb)
-                        {
-                            verbs.Add(list[k][l]);
-                            return 1;/*Текстбокс знайдений та його літера співпадае з літерою новостворенного текстбокса*/
-                        }
-                        else
-                            return -1;/*Текстбокс знайдений та його літера не співпадае з літерою новостворенного текстбокса*/
-                    }
-                }
-            }
-            return 0;/*Текстбокс не знайдений*/
-        }
-        private void diff3_click(object sender, EventArgs e)
-        {
-            dif = 3;
-            int verb8 = 3;
-            int verb7 = 3;
-            int verb6 = 2;
-            int verb5 = 1;
-            int verb4 = 2;
-            Buttonsdestroy();
-            diffchoosepanel.Dispose();
-            LoadScreen();
-            Main(verb8, verb7, verb6, verb5, verb4);
-
-        }
-
-        private void diff2_click(object sender, EventArgs e)
-        {
-            dif = 2;
-            int verb8 = 2;
-            int verb7 = 2;
-            int verb6 = 2;
-            int verb5 = 2;
-            int verb4 = 3;
-            Buttonsdestroy();
-            diffchoosepanel.Dispose();
-            LoadScreen();
-            Main(verb8, verb7, verb6, verb5, verb4);
-
-        }
-
-        private void diff1_click(object sender, EventArgs e)
-        {
-            dif = 1;
-            int verb8 = 1;
-            int verb7 = 1;
-            int verb6 = 2;
-            int verb5 = 3;
-            int verb4 = 4;
-            Buttonsdestroy();
-            diffchoosepanel.Dispose();
-            LoadScreen();
-            Main(verb8, verb7, verb6, verb5, verb4);
-
-        }
-        void Rulespanel()
-        {
-            rulespanel.BackgroundImage = Image.FromFile("Rules.png");
-            rulespanel.Location = new Point(0, 0);
-            rulespanel.Size = new Size(1200, 900);
-            Controls.Add(rulespanel);
-            rulespanel.Click += new EventHandler(rulespanel_click);
-        }
-
-        private void rulespanel_click(object sender, EventArgs e)
-        {
-            rulespanel.Dispose();
-            Controls.Add(diff1);
-            Controls.Add(diff2);
-            Controls.Add(diff3);
-            Controls.Add(diffchoosepanel);
-        }
-
-        private void startpanel_Click(object sender, EventArgs e)
-        {
-            BackColor = ColorTranslator.FromHtml("#202020");
-            diffchoosepanel.BackgroundImage = Image.FromFile("Diffchoose.png");
-            diffchoosepanel.Location = new Point(0, 0);
-            diffchoosepanel.Size = new Size(1200, 900);
-            startpanel.Dispose();
-            Rulespanel();
-        }
 
         public Form1()
         {
@@ -180,7 +72,6 @@ namespace Курсова
             diflabel.TextAlign = ContentAlignment.MiddleRight;
             diflabel.Font = new Font("Times New Roman", this.Height / 35);
             diflabel.BackColor = ColorTranslator.FromHtml("#fb9b49");
-            diflabel.Text = "none";
 
             gametimelabel.Location = new Point(590, 365);
             gametimelabel.Size = new Size(130, 20);
@@ -220,6 +111,7 @@ namespace Курсова
             diff2.Click += new EventHandler(diff2_click);
             diff3.Click += new EventHandler(diff3_click);
             ClientSize = new Size(1200, 900);
+
             Launch();
             Menu();
 
@@ -264,6 +156,43 @@ namespace Курсова
             }
 
         }
+
+        public new void Menu()/*стартове меню*/
+        {
+            startpanel.Location = new Point(0, 0);
+            startpanel.Size = new Size(1200, 900);
+            startpanel.BackgroundImage = Image.FromFile("Data/Crossword.png");
+            startpanel.Click += new EventHandler(this.startpanel_Click);
+            Controls.Add(startpanel);
+        }
+
+        private void startpanel_Click(object sender, EventArgs e)
+        {
+            BackColor = ColorTranslator.FromHtml("#202020");
+            diffchoosepanel.BackgroundImage = Image.FromFile("Data/Diffchoose.png");
+            diffchoosepanel.Location = new Point(0, 0);
+            diffchoosepanel.Size = new Size(1200, 900);
+            startpanel.Dispose();
+            Rulespanel();
+        }
+        void Rulespanel()
+        {
+            rulespanel.BackgroundImage = Image.FromFile("Data/Rules.png");
+            rulespanel.Location = new Point(0, 0);
+            rulespanel.Size = new Size(1200, 900);
+            Controls.Add(rulespanel);
+            rulespanel.Click += new EventHandler(rulespanel_click);
+        }
+
+        private void rulespanel_click(object sender, EventArgs e)
+        {
+            rulespanel.Dispose();
+            Controls.Add(diff1);
+            Controls.Add(diff2);
+            Controls.Add(diff3);
+            Controls.Add(diffchoosepanel);
+        }
+
         void LoadScreen()/*Приховує процес побудови кросворду*/
         {
 
@@ -280,9 +209,7 @@ namespace Курсова
             loadpanel.BackColor = ColorTranslator.FromHtml("#202020");
             Controls.Add(loadpanel);
 
-
         }
-
 
         void sec(bool start)/*Секундомер гри*/
         {
@@ -313,7 +240,8 @@ namespace Курсова
 
 
         }
-        void Main(int verb8, int verb7, int verb6, int verb5, int verb4)/*Метод розподілення слів до генерації відносно рівня складності*/
+
+        void Main(int verb8, int verb7, int verb6, int verb5, int verb4)/*Метод розподілення слів для генерації відносно рівня складності*/
         {
             int range_top_left_angle = 3;//*50-in points
             int range_bottom_right_angle = 16;//*50-in points
@@ -430,6 +358,7 @@ namespace Курсова
                 /*Випадковим чином бере слово з БД та перевія його на можливість додання до кросворду*/
                 for (int j = 0; j < num; j++)
                 {
+                    changedirection = 0;
                 restart:
                     changedirection++;
                     int randword = rand.Next(1, 99);
@@ -598,7 +527,7 @@ namespace Курсова
                             foreach (TextBox o in verbs)
                                 Controls.Add(o);
                             percents += 9.09;
-                            percentslabel.Text = Math.Truncate(percents).ToString() + "%";
+                            percentslabel.Text = Math.Truncate(percents).ToString() + "%\n";
                         Skip:;
                         }
                     }
@@ -608,8 +537,81 @@ namespace Курсова
                 }
             }
 
+        }
+
+        void Buttonsdestroy()/*Метод видалення кнопок рівнів складності*/
+        {
+            diff1.Dispose();
+            diff2.Dispose();
+            diff3.Dispose();
+        }
+
+        public static int CheckLocation(ref List<List<TextBox>> list, Point pos, char verb, ref List<TextBox> verbs, ref List<string> true_ans)
+        {
+            /*Метод перевіре наявність текстбокса з певними кординатами та його літеру*/
+            for (int k = 0; k < list.Count; k++)
+            {
+                for (int l = 0; l < list[k].Count; l++)
+                {
+                    if (pos.ToString() == list[k][l].Location.ToString())
+                    {
+                        if (true_ans[k][l] == verb)
+                        {
+                            verbs.Add(list[k][l]);
+                            return 1;/*Текстбокс знайдений та його літера співпадае з літерою новостворенного текстбокса*/
+                        }
+                        else
+                            return -1;/*Текстбокс знайдений та його літера не співпадае з літерою новостворенного текстбокса*/
+                    }
+                }
+            }
+            return 0;/*Текстбокс не знайдений*/
+        }
+        private void diff3_click(object sender, EventArgs e)
+        {
+            dif = "Складний";
+            int verb8 = 3;
+            int verb7 = 3;
+            int verb6 = 2;
+            int verb5 = 1;
+            int verb4 = 2;
+            Buttonsdestroy();
+            diffchoosepanel.Dispose();
+            LoadScreen();
+            Main(verb8, verb7, verb6, verb5, verb4);
 
         }
+
+        private void diff2_click(object sender, EventArgs e)
+        {
+            dif = "Середній";
+            int verb8 = 2;
+            int verb7 = 2;
+            int verb6 = 2;
+            int verb5 = 2;
+            int verb4 = 3;
+            Buttonsdestroy();
+            diffchoosepanel.Dispose();
+            LoadScreen();
+            Main(verb8, verb7, verb6, verb5, verb4);
+
+        }
+
+        private void diff1_click(object sender, EventArgs e)
+        {
+            dif = "Легкий";
+            int verb8 = 1;
+            int verb7 = 1;
+            int verb6 = 2;
+            int verb5 = 3;
+            int verb4 = 4;
+            Buttonsdestroy();
+            diffchoosepanel.Dispose();
+            LoadScreen();
+            Main(verb8, verb7, verb6, verb5, verb4);
+
+        }
+
         public void EndGame()/*Метод закінчення гри та виведення статистики*/
         {
             scorelabel2.Dispose();
@@ -623,25 +625,11 @@ namespace Курсова
             }
             lo.Dispose();
             check.Dispose();
-            BackgroundImage = Image.FromFile("Results3.png");
+            BackgroundImage = Image.FromFile("Data/Results3.png");
             checkslabel.Text = checks.ToString();
 
             gametimelabel.Text = "X" + multtime + ".    " + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
-            switch (dif)
-            {
-                case 1:
-                    diflabel.Text = "Легкий";
-                    break;
-                case 2:
-                    diflabel.Text = "Середній";
-                    break;
-                case 3:
-                    diflabel.Text = "Складний";
-                    break;
-                default:
-                    break;
-
-            }
+            diflabel.Text = dif;
             multtime = 1;
             if ((gametime / 60) < 5)
                 multtime = 3;
@@ -678,6 +666,7 @@ namespace Курсова
             if (alldone)
                 EndGame();
         }
+
         void Scorecalc()/*Метод вираховування очок*/
         {
             for (int i = 0; i < list_of_Textboxes.Count; i++)
@@ -709,6 +698,7 @@ namespace Курсова
                 list_of_Textboxes[word][j].Enabled = false;
             }
         }
+
 
         void Selectword(int num)/*Виділянє усе слово при натисканні на 1 з його текстбоксів*/
         {
