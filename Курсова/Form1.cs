@@ -16,12 +16,11 @@ namespace Курсова
         public List<String> questions = new List<string>();
         public int direction = 1;
         public int changedirection = -1;
-        public List<TextBox> scale = new List<TextBox>();
 
         public Panel startpanel = new Panel();
         public Panel diffchoosepanel = new Panel();
         public Panel rulespanel = new Panel();
-        public Panel stats = new Panel();
+
 
         public Button diff1 = new Button();
         public Button diff2 = new Button();
@@ -35,7 +34,7 @@ namespace Курсова
         public Label secs = new Label();
 
         public string dif = "none";
-        public int score = 0;
+        public double score = 0.0;
         public int gametime = 0;
         public int checks = 0;
 
@@ -78,7 +77,8 @@ namespace Курсова
             gametimelabel.TextAlign = ContentAlignment.MiddleRight;
             gametimelabel.Font = new Font("Times New Roman", this.Height / 35);
             gametimelabel.BackColor = ColorTranslator.FromHtml("#fb9b49");
-            gametimelabel.Text = gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
+            gametimelabel.Text = gametime / 60 / 10 + "" + 
+                gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
 
             checkslabel.Location = new Point(590, 420);
             checkslabel.Size = new Size(130, 20);
@@ -87,8 +87,8 @@ namespace Курсова
             checkslabel.BackColor = ColorTranslator.FromHtml("#fb9b49");
             checkslabel.Text = checks.ToString();
 
-            scorelabel.Location = new Point(590, 480);
-            scorelabel.Size = new Size(130, 20);
+            scorelabel.Location = new Point(565, 480);
+            scorelabel.Size = new Size(160, 20);
             scorelabel.TextAlign = ContentAlignment.MiddleRight;
             scorelabel.Font = new Font("Times New Roman", this.Height / 35);
             scorelabel.BackColor = ColorTranslator.FromHtml("#fb9b49");
@@ -114,7 +114,6 @@ namespace Курсова
 
             Launch();
             Menu();
-
         }
         void Launch()/*Чорний єкран на початку*/
         {
@@ -123,7 +122,6 @@ namespace Курсова
                     Panel launch = new Panel();
                     launch.Location = new Point(0, 0);
                     launch.Size = new Size(1200, 900);
-
 
                     int time = -10;
                     var timer = new Timer
@@ -328,6 +326,7 @@ namespace Курсова
             }
             int deltaX = 600 - (minX + maxX) / 2;
             int deltaY = 450 - (minY + maxY) / 2;
+            List<TextBox> scale = new List<TextBox>();
             for (int i = 0; i < list_of_Textboxes.Count; i++)
             {
                 for (int j = 0; j < list_of_Textboxes[i].Count; j++)
@@ -378,6 +377,7 @@ namespace Курсова
                     string query = "SELECT verb" + lg + " FROM Words WHERE num=" + randword;
                     OleDbCommand command = new OleDbCommand(query, myConnection);
                     //lo.Text = "Слoво в обробці:   " + command.ExecuteScalar().ToString() + "\nСтворено слів:  " + list_of_Textboxes.Count + "\nНапрямок:     " + direction;
+                    string tmpword = command.ExecuteScalar().ToString();
 
                     bool done = false;
                     for (int row = range_top_left_angle; row < range_bottom_right_angle; row++)
@@ -400,7 +400,7 @@ namespace Курсова
                             }
 
                             bool doublecross = false;
-                            for (int i = 0; i < command.ExecuteScalar().ToString().Length; i++)
+                            for (int i = 0; i < tmpword.Length; i++)
                             {
 
                                 Point pos_top = new Point(px, py - 50);
@@ -408,7 +408,7 @@ namespace Курсова
                                 Point pos_right = new Point(px + 50, py);
                                 Point pos_buttom = new Point(px, py + 50);
 
-                                switch (CheckLocation(ref list_of_Textboxes, new Point(px, py), command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers))
+                                switch (CheckLocation(ref list_of_Textboxes, new Point(px, py), tmpword[i], ref verbs, ref true_answers))
                                 {
                                     case 1:
                                         cross = true;
@@ -418,27 +418,27 @@ namespace Курсова
                                         if (direction == 1)
                                         {
                                             px += 50;
-                                            if (i == command.ExecuteScalar().ToString().Length - 1)
+                                            if (i == tmpword.Length - 1)
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_right, tmpword[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                             else
                                                 if (i == 0)
-                                                if (CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_left, tmpword[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                         }
                                         else
                                         {
-                                            if (i == command.ExecuteScalar().ToString().Length - 1)
+                                            if (i == tmpword.Length - 1)
                                             {
 
-                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, tmpword[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                             if (i == 0)
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_top, tmpword[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                             py += 50;
@@ -456,32 +456,32 @@ namespace Курсова
 
                                         if (i == 0)//first verb
                                         {
-                                            if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0
-                                                || CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                            if (CheckLocation(ref list_of_Textboxes, pos_top, tmpword[i], ref verbs, ref true_answers) != 0
+                                                || CheckLocation(ref list_of_Textboxes, pos_left, tmpword[i], ref verbs, ref true_answers) != 0)
                                                 goto Skip;
                                         }
 
                                         if (direction == 1)
                                         {
-                                            if (CheckLocation(ref list_of_Textboxes, pos_top, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0 ||
-                                                CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                            if (CheckLocation(ref list_of_Textboxes, pos_top, tmpword[i], ref verbs, ref true_answers) != 0 ||
+                                                CheckLocation(ref list_of_Textboxes, pos_buttom, tmpword[i], ref verbs, ref true_answers) != 0)
                                                 goto Skip;
 
-                                            if (i == command.ExecuteScalar().ToString().Length - 1)//last verb
+                                            if (i == tmpword.Length - 1)//last verb
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_right, tmpword[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                         }
                                         else
                                         {
-                                            if (CheckLocation(ref list_of_Textboxes, pos_left, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0 ||
-                                                CheckLocation(ref list_of_Textboxes, pos_right, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                            if (CheckLocation(ref list_of_Textboxes, pos_left, tmpword[i], ref verbs, ref true_answers) != 0 ||
+                                                CheckLocation(ref list_of_Textboxes, pos_right, tmpword[i], ref verbs, ref true_answers) != 0)
                                                 goto Skip;
 
-                                            if (i == command.ExecuteScalar().ToString().Length - 1)//last verb
+                                            if (i == tmpword.Length - 1)//last verb
                                             {
-                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, command.ExecuteScalar().ToString()[i], ref verbs, ref true_answers) != 0)
+                                                if (CheckLocation(ref list_of_Textboxes, pos_buttom, tmpword[i], ref verbs, ref true_answers) != 0)
                                                     goto Skip;
                                             }
                                         }
@@ -504,7 +504,7 @@ namespace Курсова
                                         else
                                             py += 50;
 
-                                        //verbs[i].Text = command.ExecuteScalar().ToString()[i].ToString();
+                                        //verbs[i].Text = tmpword[i].ToString();
                                         break;
 
                                     default:
@@ -519,7 +519,7 @@ namespace Курсова
                             done = true;
                             usedwords.Add(randword);
                             list_of_Textboxes.Add(verbs);
-                            true_answers.Add(command.ExecuteScalar().ToString());
+                            true_answers.Add(tmpword);
                             direction *= -1;
                             string quest = "SELECT question" + lg + " FROM Words WHERE num=" + randword;
                             OleDbCommand command2 = new OleDbCommand(quest, myConnection);
@@ -548,7 +548,7 @@ namespace Курсова
 
         public static int CheckLocation(ref List<List<TextBox>> list, Point pos, char verb, ref List<TextBox> verbs, ref List<string> true_ans)
         {
-            /*Метод перевіре наявність текстбокса з певними кординатами та його літеру*/
+            /*Метод перевіряє наявність текстбокса з певними кординатами та його літеру*/
             for (int k = 0; k < list.Count; k++)
             {
                 for (int l = 0; l < list[k].Count; l++)
@@ -558,10 +558,10 @@ namespace Курсова
                         if (true_ans[k][l] == verb)
                         {
                             verbs.Add(list[k][l]);
-                            return 1;/*Текстбокс знайдений та його літера співпадае з літерою новостворенного текстбокса*/
+                            return 1;/*Текстбокс знайдений та його літера співпадає з літерою новостворенного текстбокса*/
                         }
                         else
-                            return -1;/*Текстбокс знайдений та його літера не співпадае з літерою новостворенного текстбокса*/
+                            return -1;/*Текстбокс знайдений та його літера не співпадає з літерою новоствореного текстбокса*/
                     }
                 }
             }
@@ -639,7 +639,7 @@ namespace Курсова
 
             checkslabel.Text = "X(1/" + checks + ")    " + checks.ToString();
             gametimelabel.Text = "X" + multtime + "    " + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
-            scorelabel.Text = "X(" + multtime + "/" + checks + ")   " + score * multtime / checks;
+            scorelabel.Text = Math.Truncate(score * multtime / checks).ToString();
             Controls.Add(scorelabel);
             Controls.Add(checkslabel);
             Controls.Add(gametimelabel);
@@ -680,10 +680,11 @@ namespace Курсова
                         break;
                     }
                 }
+
                 if (list_of_Textboxes[i][0].Enabled == false && norepeat)
                 {
                     unrepeat.Add(i);
-                    score += 305 * list_of_Textboxes[i].Count;
+                    Math.Truncate(score += list_of_Textboxes[i].Count * 1000);
                 }
 
             }
@@ -698,7 +699,6 @@ namespace Курсова
                 list_of_Textboxes[word][j].Enabled = false;
             }
         }
-
 
         void Selectword(int num)/*Виділянє усе слово при натисканні на 1 з його текстбоксів*/
         {
