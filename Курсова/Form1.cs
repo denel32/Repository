@@ -21,7 +21,6 @@ namespace Курсова
         public Panel diffchoosepanel = new Panel();
         public Panel rulespanel = new Panel();
 
-
         public Button diff1 = new Button();
         public Button diff2 = new Button();
         public Button diff3 = new Button();
@@ -77,7 +76,7 @@ namespace Курсова
             gametimelabel.TextAlign = ContentAlignment.MiddleRight;
             gametimelabel.Font = new Font("Times New Roman", this.Height / 35);
             gametimelabel.BackColor = ColorTranslator.FromHtml("#fb9b49");
-            gametimelabel.Text = gametime / 60 / 10 + "" + 
+            gametimelabel.Text = gametime / 60 / 10 + "" +
                 gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
 
             checkslabel.Location = new Point(590, 420);
@@ -376,7 +375,6 @@ namespace Курсова
 
                     string query = "SELECT verb" + lg + " FROM Words WHERE num=" + randword;
                     OleDbCommand command = new OleDbCommand(query, myConnection);
-                    //lo.Text = "Слoво в обробці:   " + command.ExecuteScalar().ToString() + "\nСтворено слів:  " + list_of_Textboxes.Count + "\nНапрямок:     " + direction;
                     string tmpword = command.ExecuteScalar().ToString();
 
                     bool done = false;
@@ -384,7 +382,6 @@ namespace Курсова
                     {
                         for (int col = range_top_left_angle; col < range_bottom_right_angle; col++)
                         {
-
                             if (done)
                             {
                                 goto end;
@@ -402,12 +399,10 @@ namespace Курсова
                             bool doublecross = false;
                             for (int i = 0; i < tmpword.Length; i++)
                             {
-
                                 Point pos_top = new Point(px, py - 50);
                                 Point pos_left = new Point(px - 50, py);
                                 Point pos_right = new Point(px + 50, py);
                                 Point pos_buttom = new Point(px, py + 50);
-
                                 switch (CheckLocation(ref list_of_Textboxes, new Point(px, py), tmpword[i], ref verbs, ref true_answers))
                                 {
                                     case 1:
@@ -448,11 +443,6 @@ namespace Курсова
                                         break;
 
                                     case 0:
-                                        doublecross = false;
-                                        pos_top = new Point(px, py - 50);
-                                        pos_left = new Point(px - 50, py);
-                                        pos_right = new Point(px + 50, py);
-                                        pos_buttom = new Point(px, py + 50);
 
                                         if (i == 0)//first verb
                                         {
@@ -521,9 +511,11 @@ namespace Курсова
                             list_of_Textboxes.Add(verbs);
                             true_answers.Add(tmpword);
                             direction *= -1;
+
                             string quest = "SELECT question" + lg + " FROM Words WHERE num=" + randword;
                             OleDbCommand command2 = new OleDbCommand(quest, myConnection);
                             questions.Add(command2.ExecuteScalar().ToString());
+
                             foreach (TextBox o in verbs)
                                 Controls.Add(o);
                             percents += 9.09;
@@ -628,7 +620,8 @@ namespace Курсова
             BackgroundImage = Image.FromFile("Data/Results3.png");
             checkslabel.Text = checks.ToString();
 
-            gametimelabel.Text = "X" + multtime + ".    " + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
+            gametimelabel.Text = "X" + multtime + ".    " + gametime / 60 / 10 + ""
+                + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
             diflabel.Text = dif;
             multtime = 1;
             if ((gametime / 60) < 5)
@@ -638,7 +631,8 @@ namespace Курсова
                 multtime = 2;
 
             checkslabel.Text = "X(1/" + checks + ")    " + checks.ToString();
-            gametimelabel.Text = "X" + multtime + "    " + gametime / 60 / 10 + "" + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
+            gametimelabel.Text = "X" + multtime + "    " + gametime / 60 / 10 + ""
+                + gametime / 60 % 10 + ":" + gametime % 60 / 10 + "" + gametime % 60 % 10;
             scorelabel.Text = Math.Truncate(score * multtime / checks).ToString();
             Controls.Add(scorelabel);
             Controls.Add(checkslabel);
